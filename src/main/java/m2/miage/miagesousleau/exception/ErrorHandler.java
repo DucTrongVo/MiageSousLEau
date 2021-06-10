@@ -28,12 +28,17 @@ public class ErrorHandler implements ResponseErrorHandler {
         }else if (clientHttpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readValue(clientHttpResponse.getBody(), JsonNode.class);
-            String message = jsonNode.get("messageErreur").asText();
+            String message = jsonNode.asText();
+            if (jsonNode.get("messageErreur") != null){
+                message = jsonNode.get("messageErreur").asText();
+            }
             logger.error(jsonNode.asText());
             if (clientHttpResponse.getRawStatusCode() == 404) {
+                logger.error(message);
                 throw new NotFoundException(message);
             }
             if (clientHttpResponse.getRawStatusCode() == 403) {
+                logger.error(message);
                 throw new ForbiddenException(message);
             }
             else {
