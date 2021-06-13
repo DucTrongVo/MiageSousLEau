@@ -23,7 +23,7 @@ public class ErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse clientHttpResponse) {
         if (clientHttpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
-            logger.error("Une erreur est survenue : " + clientHttpResponse);
+            logger.error("Une erreur de serveur est survenue : " + clientHttpResponse.getBody());
             throw new GeneralErreurException();
         }else if (clientHttpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
             ObjectMapper mapper = new ObjectMapper();
@@ -42,7 +42,7 @@ public class ErrorHandler implements ResponseErrorHandler {
                 throw new ForbiddenException(message);
             }
             else {
-                logger.error("Une erreur est survenue : " + clientHttpResponse);
+                logger.error("Une erreur est survenue : " + clientHttpResponse.getBody());
                 throw new GeneralErreurException();
             }
         }

@@ -6,6 +6,7 @@ import m2.miage.miagesousleau.entities.dto.CoursWithPiscine;
 import m2.miage.miagesousleau.entities.dto.Membre;
 import m2.miage.miagesousleau.entities.dto.Operation;
 import m2.miage.miagesousleau.entities.dto.Piscine;
+import m2.miage.miagesousleau.entities.dto.Statistique;
 import m2.miage.miagesousleau.exception.ForbiddenException;
 import m2.miage.miagesousleau.exception.GeneralErreurException;
 import m2.miage.miagesousleau.exception.NotFoundException;
@@ -38,4 +39,7 @@ public interface IMSLService {
     List<CoursWithPiscine> getAllCours() throws GeneralErreurException, NotFoundException;
     Cours creerCours(Cours cours, String emailEnseignant) throws ForbiddenException, NotFoundException;
     Cours inscrit(int idCours, String emailEtudiant) throws ForbiddenException, NotFoundException;
+
+    // stat
+    Statistique getStat(String emailPresident);
 }

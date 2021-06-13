@@ -1,12 +1,14 @@
 package m2.miage.miagesousleau.services;
 
-import com.thoughtworks.qdox.model.expression.Not;
 import m2.miage.miagesousleau.entities.dto.Apte;
 import m2.miage.miagesousleau.entities.dto.Cours;
 import m2.miage.miagesousleau.entities.dto.CoursWithPiscine;
 import m2.miage.miagesousleau.entities.dto.Membre;
 import m2.miage.miagesousleau.entities.dto.Operation;
 import m2.miage.miagesousleau.entities.dto.Piscine;
+import m2.miage.miagesousleau.entities.dto.Statistique;
+import m2.miage.miagesousleau.entities.dto.StatistiqueCours;
+import m2.miage.miagesousleau.entities.dto.StatistiqueMembre;
 import m2.miage.miagesousleau.enums.Constants;
 import m2.miage.miagesousleau.enums.EnumTypeUtilisateur;
 import m2.miage.miagesousleau.exception.ForbiddenException;
@@ -23,7 +25,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MSLServiceImpl implements IMSLService{
     private static final Logger logger = LoggerFactory.getLogger(MSLServiceImpl.class);
@@ -224,6 +225,21 @@ public class MSLServiceImpl implements IMSLService{
         params.put("isEtudiant", EnumTypeUtilisateur.MEMBRE.name().equals(etudiant.getType()));
         return restTemplateCours.postForObject(this.serviceUrlCours+"cours/inscrit/{idCours}?idEtudiant={idEtudiant}&niveauEtudiant={niveauEtudiant}" +
             "&isEtudiant={isEtudiant}", null, Cours.class, params);
+    }
+
+    @Override
+    public Statistique getStat(String emailPresident) {
+        StatistiqueMembre statMembre = restTemplateMembre.getForObject(this.serviceUrlMembres+"membres/stat/{emailPresident}", StatistiqueMembre.class, emailPresident);
+        logger.info("stat membre {}",statMembre);
+        StatistiqueCours statCours = restTemplateCours.getForObject(this.serviceUrlCours+"cours/stat", StatistiqueCours.class);
+        logger.info("stat cours {}",statCours);
+        Statistique statistique = new Statistique();
+        statistique.setNombreCours(statCours.getNombreCours());
+        statistique.setNombreEnseignants(statMembre.getNombreEnseignants());
+        statistique.setNombreMembres(statMembre.getNombreMembres());
+        statistique.setTotalCotisationPrevues(statMembre.getTotalCotisationPrevues());
+        statistique.setTotalCotisationReglees(statMembre.getTotalCotisationReglees());
+        return statistique;
     }
 
 }

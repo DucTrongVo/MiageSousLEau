@@ -1,11 +1,10 @@
 package m2.miage.miagesousleau.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import m2.miage.miagesousleau.entities.dto.Apte;
 import m2.miage.miagesousleau.entities.dto.Membre;
 import m2.miage.miagesousleau.entities.dto.Operation;
+import m2.miage.miagesousleau.entities.dto.Statistique;
 import m2.miage.miagesousleau.exception.ForbiddenException;
-import m2.miage.miagesousleau.exception.GeneralErreurException;
 import m2.miage.miagesousleau.exception.NotFoundException;
 import m2.miage.miagesousleau.services.IMSLService;
 import org.slf4j.Logger;
@@ -100,6 +99,19 @@ public class MembreController {
             logger.info("Get opération by membre  email={}",emailMembre);
             return ResponseEntity.ok(mslService.getAllOperationByMembre(emailSec, emailMembre));
         } catch (HttpStatusCodeException e){
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/stat/{emailPresident}")
+    private ResponseEntity<Statistique> getStat(@PathVariable("emailPresident") String emailPresident){
+        try{
+            logger.info("Get stat by membre  email={}",emailPresident);
+            return ResponseEntity.ok(mslService.getStat(emailPresident));
+        } catch (HttpStatusCodeException e){
+            logger.error("erreur : ",e.getMessage());
+            logger.error("erreur : ",e.getCause());
+            logger.error("erreur : ",e.getResponseBodyAsString());
             return null;
         }
     }
