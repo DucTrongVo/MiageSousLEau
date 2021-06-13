@@ -111,16 +111,19 @@ public class MSLServiceImpl implements IMSLService{
 
     @Override
     public Piscine getPiscineByRecordID(String recordId) throws GeneralErreurException {
-        String piscineJson = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"q=&refine.recordid="+recordId, String.class);
-        Piscine piscine = toolService.convertJsonToPiscine(piscineJson);
+        //String piscineJson = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"q=&refine.recordid="+recordId, String.class);
+        Piscine piscine = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"piscine/?recordID="+recordId, Piscine.class);
+        //Piscine piscine = toolService.convertJsonToPiscine(piscineJson);
         logger.info("Piscine d'id {} trouvé est {}",recordId, piscine);
         return piscine;
     }
 
     @Override
     public List<Piscine> getAllPiscines() throws GeneralErreurException{
-        String piscinesJson = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"q=", String.class);
-        return toolService.convertJsonToPiscines(piscinesJson);
+        //String piscinesJson = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"q=", String.class);
+        Piscine[] piscines = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"piscine/all", Piscine[].class);
+        return new ArrayList<>(Arrays.asList(piscines));
+        //return toolService.convertJsonToPiscines(piscinesJson);
     }
 
     @Override
