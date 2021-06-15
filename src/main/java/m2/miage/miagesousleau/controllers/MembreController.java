@@ -62,6 +62,16 @@ public class MembreController {
         }
     }
 
+    @PostMapping(value = "/delete/{email}")
+    private ResponseEntity<String> creerMembre(@RequestParam("emailRequester") String emailRequester, @PathVariable("email") String email){
+        try{
+            logger.info("Supprimer membre ");
+            return new ResponseEntity<>(mslService.supprimerUnMembre(emailRequester, email), HttpStatus.OK);
+        } catch (HttpStatusCodeException e){
+            return null;
+        }
+    }
+
     @PostMapping(value = "/maj/{email}")
     private ResponseEntity<Membre> mettreAJourMembre(@RequestParam("emailRequester") String emailRequester,
                                                      @PathVariable("email")  String email, @RequestBody Membre membre) {

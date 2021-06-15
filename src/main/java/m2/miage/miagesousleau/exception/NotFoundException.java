@@ -1,6 +1,6 @@
 package m2.miage.miagesousleau.exception;
 
-public class NotFoundException extends Exception{
+public class NotFoundException extends RuntimeException{
 
     private static final long serialVersionUID = 2072764419774593801L;
 

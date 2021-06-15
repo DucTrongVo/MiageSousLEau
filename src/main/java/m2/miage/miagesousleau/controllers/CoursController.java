@@ -71,9 +71,22 @@ public class CoursController {
     }
 
     @PostMapping(value = "/inscrit/{idCours}")
-    ResponseEntity<Cours> creerCours(@PathVariable("idCours") int idCours, @RequestParam String emailEtudiant) throws ForbiddenException, NotFoundException {
+    ResponseEntity<Cours> inscrit(@PathVariable("idCours") int idCours, @RequestParam String emailEtudiant) throws ForbiddenException, NotFoundException {
         try {
             return new ResponseEntity<>(mslService.inscrit(idCours, emailEtudiant), HttpStatus.OK);
+        } catch (ForbiddenException e){
+            throw new ForbiddenException(e.getMessage());
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
+        } catch (HttpStatusCodeException ex){
+            return null;
+        }
+    }
+
+    @PostMapping(value = "/desinscrit/{idCours}")
+    ResponseEntity<Cours> desinscrit(@PathVariable("idCours") int idCours, @RequestParam String emailEtudiant) throws ForbiddenException, NotFoundException {
+        try {
+            return new ResponseEntity<>(mslService.desinscrit(idCours, emailEtudiant), HttpStatus.OK);
         } catch (ForbiddenException e){
             throw new ForbiddenException(e.getMessage());
         } catch (NotFoundException e) {

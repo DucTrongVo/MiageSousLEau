@@ -24,6 +24,7 @@ public interface IMSLService {
     Operation creerPaiement(String emailMembre, String iban, double montant);
     Apte isMembreApte(String email);
     List<Operation> getAllOperationByMembre(String emailSec, String emailMembre);
+    String supprimerUnMembre(String emailRequester, String email);
 
     // Gestion Piscine
     Piscine getPiscineByRecordID(String recordId) throws GeneralErreurException, NotFoundException;
@@ -39,6 +40,7 @@ public interface IMSLService {
     List<CoursWithPiscine> getAllCours() throws GeneralErreurException, NotFoundException;
     Cours creerCours(Cours cours, String emailEnseignant) throws ForbiddenException, NotFoundException;
     Cours inscrit(int idCours, String emailEtudiant) throws ForbiddenException, NotFoundException;
+    Cours desinscrit(int idCours, String emailEtudiant) throws ForbiddenException, NotFoundException;
 
     // stat
     Statistique getStat(String emailPresident);

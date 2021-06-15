@@ -111,6 +111,14 @@ public class MSLServiceImpl implements IMSLService{
     }
 
     @Override
+    public String supprimerUnMembre(String emailRequester, String email) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email",email);
+        params.put("emailRequester",emailRequester);
+        return restTemplateMembre.postForObject(this.serviceUrlMembres+"membres/delete/{email}?emailRequester={emailRequester}", null, String.class, params);
+    }
+
+    @Override
     public Piscine getPiscineByRecordID(String recordId) throws GeneralErreurException {
         //String piscineJson = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"q=&refine.recordid="+recordId, String.class);
         Piscine piscine = restTemplatePiscine.getForObject(this.serviceUrlPiscines+"piscine/?recordID="+recordId, Piscine.class);
@@ -142,7 +150,7 @@ public class MSLServiceImpl implements IMSLService{
         Map<String, String> params = new HashMap<>();
         params.put("emailSec", emailSec);
         params.put("idPaiement", String.valueOf(idOperation));
-        return restTemplateMembre.postForObject(this.serviceUrlMembres+"validerPaiement/{idPaiement}?emailSec={emailSec}", null, Operation.class, params);
+        return restTemplateMembre.postForObject(this.serviceUrlMembres+"paiement/validerPaiement/{idPaiement}?emailSec={emailSec}", null, Operation.class, params);
     }
 
     @Override
@@ -150,7 +158,7 @@ public class MSLServiceImpl implements IMSLService{
         Map<String, String> params = new HashMap<>();
         params.put("emailSec", emailSec);
         params.put("idPaiement", String.valueOf(idOperation));
-        return restTemplateMembre.postForObject(this.serviceUrlMembres+"refuserPaiement/{idPaiement}?emailSec={emailSec}", null, Operation.class, params);
+        return restTemplateMembre.postForObject(this.serviceUrlMembres+"paiement/refuserPaiement/{idPaiement}?emailSec={emailSec}", null, Operation.class, params);
     }
 
     @Override
@@ -225,6 +233,19 @@ public class MSLServiceImpl implements IMSLService{
         params.put("isEtudiant", EnumTypeUtilisateur.MEMBRE.name().equals(etudiant.getType()));
         return restTemplateCours.postForObject(this.serviceUrlCours+"cours/inscrit/{idCours}?idEtudiant={idEtudiant}&niveauEtudiant={niveauEtudiant}" +
             "&isEtudiant={isEtudiant}", null, Cours.class, params);
+    }
+
+    @Override
+    public Cours desinscrit(int idCours, String emailEtudiant) throws ForbiddenException, NotFoundException {
+        Membre etudiant = getMembreByMail(emailEtudiant).getBody();
+        if (etudiant == null) {
+            logger.error("Etudiant d'email "+emailEtudiant+" introuvable!");
+            throw new NotFoundException("Etudiant d'email "+emailEtudiant+" introuvable!");
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("idCours", idCours);
+        params.put("idEtudiant", etudiant.getId());
+        return restTemplateCours.postForObject(this.serviceUrlCours+"cours/desinscrit/{idCours}?idEtudiant={idEtudiant}", null, Cours.class, params);
     }
 
     @Override
